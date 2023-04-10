@@ -1,11 +1,26 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'PostgreSQL Slow Query Log Analyzer'
+description: 'Collect slow query log data and analyze them'
 inputs:
-  milliseconds: # change this
+  metis_api_key:
+    description: metis api key project identifier
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    default: ''
+  github_token:
+    description: github token
+    required: true
+    default: ''
+  target_url:
+    description: target url
+    required: false
+    default: 'https://app.metisdata.io'
+  metis_exporter_url:
+    description: target url
+    required: false
+    default: 'https://ingest.metisdata.io'
+  db_connection_string:
+    description: database connection string 
+    required: true
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'

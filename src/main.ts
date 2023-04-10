@@ -1,18 +1,55 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import axios from 'axios';
+const { dbDetailsFactory } = require('@metis-data/db-details');
+const parse = require('pg-connection-string').parse;
+
+const getSlowQueryLogData = async (dbConnection: any) => {
+  const dbDetails = dbDetailsFactory('postgres');
+
+  const slowQueryLogData = dbDetails.getSlowQueryLogQueriesSpans(dbConnection)
+  
+  return await slowQueryLogData;
+};
+
+const axiosPost = async (url: string, body: any, headers: any) => {
+  try {
+    const res = await axios.post(url, body, { headers: headers });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    /*
+      Parse connection string to object
+    */
+    let config = parse(core.getInput('db_connection_string'));
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    /*
+      Set actions vars from action input args
+    */
+    const metisApikey = core.getInput('metis_api_key');
+    const dbConnection = {
+      database: config.database,
+      user: config.user,
+      password: config.password,
+      host: config.host,
+      // ssl: config?.ssl || { rejectUnauthorized: false },
+    };
 
-    core.setOutput('time', new Date().toTimeString())
-  } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
+    /*
+      Collect Slow query log data.
+    */
+    const slowQueryLogData = await getSlowQueryLogData(dbConnection);
+    
+   
+  } catch (error: any) {
+    console.error(error);
+    core.setFailed(error);
   }
 }
 
