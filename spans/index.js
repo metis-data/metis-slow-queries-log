@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { uuid } = require('uuidv4');
-
+const core = require('@actions/core');
 
  const sendSpansToBackend  = async(queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
   if (!apiKey) {
