@@ -1,14 +1,14 @@
-const core = require('@actions/core')
+const core = require("@actions/core");
 
 async function main() {
-  const lastTag = core.getInput('tag')
-  
-  let version = lastTag.replace('v', '')
-  
-  version = version.split('.').map(i => Number.parseInt(i) === NaN ? 0 : Number.parseInt(i))
-  version[2]++
+  const lastTag = core.getInput("tag");
 
-  core.setOutput('tag', `v${version.join('.')}`)
+  let version = lastTag.replace("v", "").replace(/\s/g, "");;
+
+  version = version.split(".").map((i) => Number.parseInt(i));
+  version[2]++;
+
+  core.setOutput("tag", `v${version.join(".")}`);
 }
 
-main()
+main();
