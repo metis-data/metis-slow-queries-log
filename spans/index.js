@@ -161,9 +161,10 @@ return response;
  const  sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQueryLogData, connection, logFileName, metisBackendUrl) =>  {
 
   if(metisApikey && metisExporterUrl) {
-    core.info(JSON.stringify(slowQueryLogData[0]));
+   
     const spans = await Promise.all(slowQueryLogData.map(async (item) => {
       const splitted = item.message.split("plan:");
+      core.info(splitted[1]);
       const jsonStr = JSON.parse(splitted[1]);
       return await makeSpan(jsonStr['Query Text'], 'select', {Plan: jsonStr.Plan}, connection, logFileName )
        
