@@ -127,7 +127,7 @@ const axiosPost = async (url, body, options) => {
   yield result;
 }
 
-export async function sendMultiSpans(
+ async function sendMultiSpans(
   url,
   apiKey,
   spans
