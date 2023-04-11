@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
+  "name": "metis-slow-queries-log",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "metis-slow-queries-log",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/metis-data/metis-slow-queries-log.git"
   },
   "keywords": [
     "actions",
