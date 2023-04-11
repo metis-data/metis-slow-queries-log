@@ -164,8 +164,7 @@ return response;
    
     const spans = await Promise.all(slowQueryLogData.map(async (item) => {
       const splitted = item.message.split("plan:");
-      core.info(splitted[1]);
-      const jsonStr = JSON.parse(splitted[1]);
+      const jsonStr = JSON.parse(splitted[1].replace("undefined", ""));
       return await makeSpan(jsonStr['Query Text'], 'select', {Plan: jsonStr.Plan}, connection, logFileName )
        
     }))
