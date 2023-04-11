@@ -1,0 +1,1 @@
+{"version":3,"file":"materialized-view.js","sourceRoot":"","sources":["../../../src/pg-structure/entity/materialized-view.ts"],"names":[],"mappings":";;;;;AAAA,sEAA6C;AAC7C,4DAAoC;AAGpC;;GAEG;AACH,MAAqB,gBAAiB,SAAQ,gBAAM;IAApD;;QACE;;WAEG;QACa,YAAO,GAA+C,yBAAc,CAAC,YAAY,CAAC,EAAE,EAAE,MAAM,CAAC,CAAC;IAChH,CAAC;CAAA;AALD,mCAKC"}

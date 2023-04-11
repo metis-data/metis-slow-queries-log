@@ -1,0 +1,1 @@
+{"version":3,"file":"view.d.ts","sourceRoot":"","sources":["../../../src/pg-structure/entity/view.ts"],"names":[],"mappings":"AAAA,OAAO,cAAc,MAAM,iBAAiB,CAAC;AAC7C,OAAO,OAAO,MAAM,YAAY,CAAC;AACjC,OAAO,MAAM,MAAM,gBAAgB,CAAC;AAEpC;;GAEG;AACH,MAAM,CAAC,OAAO,OAAO,IAAK,SAAQ,MAAM;IACtC;;OAEG;IACH,SAAgB,QAAQ,EAAE,cAAc,CAAC,OAAO,EAAE,MAAM,EAAE,KAAK,EAAE,IAAI,CAAC,CAA2C;CAClH"}
