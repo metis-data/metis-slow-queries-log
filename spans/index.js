@@ -119,7 +119,7 @@ function* chuncker(data, limit = 200000) {
 }
 
 async function sendMultiSpans(url, apiKey, spans) {
-  core.info(`spans length : ${spans.length}`)
+  core.info(`spans length : ${spans.length}`);
   const spansString = spans.map((d) => JSON.stringify(d, null, 0));
   const response = [];
   for (let chuckedData of chuncker(spansString)) {
@@ -148,9 +148,10 @@ const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQuer
       slowQueryLogData.map(async (item) => {
         const splitted = item.message.split('plan:');
         const data = splitted[1];
+        core.info(`data: ${data}`);
         if (data) {
           const jsonStr = JSON.parse(data);
-          core.info(data)
+          core.info(data);
           return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logFileName);
         }
       })
