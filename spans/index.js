@@ -150,6 +150,7 @@ const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQuer
         const data = splitted[1];
         if (data) {
           const jsonStr = JSON.parse(data);
+          core.info(data)
           return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logFileName);
         }
       })
