@@ -1,7 +1,7 @@
 import axios from "axios";
 import { uuid } from "uuidv4";
 
-//////
+
 export const sendSpansToBackend  = async(queriesToSend: any, apiKey: string, metisExporterUrl: string, logFileName: string, metisBackendUrl?:string) => {
   if (!apiKey) {
     console.debug("API Key doesnt exists");
