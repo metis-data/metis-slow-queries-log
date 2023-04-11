@@ -120,7 +120,7 @@ function* chuncker(data, limit = 200000) {
 
 async function sendMultiSpans(url, apiKey, spans) {
   core.info(`spans length : ${spans.length}`);
-  const spansString = spans.map((d) => JSON.stringify(d, null, 0));
+  const spansString = spans.map((d) => d && JSON.stringify(d, null, 0));
   const response = [];
   for (let chuckedData of chuncker(spansString)) {
     const dataString = chuckedData ? JSON.stringify(chuckedData, null, 0) : undefined;
