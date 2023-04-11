@@ -5,7 +5,7 @@ async function main() {
 
   let version = lastTag.replace('v', '')
 
-  version = version.split('.').map(i => Number.parseInt(i))
+  version = version.split('.').map(i => Number.parseInt(i === undefined ? 0 : i))
   core.info(version[0])
   core.info(version[1])
   version[1]++
