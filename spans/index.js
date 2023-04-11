@@ -122,19 +122,21 @@ async function sendMultiSpans(url, apiKey, spans) {
   const spansString = spans.map((d) => JSON.stringify(d, null, 0));
   const response = [];
   for (let chuckedData of chuncker(spansString)) {
-    const dataString = JSON.stringify(chuckedData, null, 0);
+    if (dataString) {
+      const dataString = JSON.stringify(chuckedData, null, 0);
 
-    const options = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Content-Length': dataString.length,
-        'x-api-key': apiKey,
-      },
-    };
+      const options = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Content-Length': dataString.length,
+          'x-api-key': apiKey,
+        },
+      };
 
-    response.push(await axiosPost(url, dataString, options));
+      response.push(await axiosPost(url, dataString, options));
+    }
   }
 
   return response;
