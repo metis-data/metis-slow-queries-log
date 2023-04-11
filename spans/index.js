@@ -2,7 +2,7 @@ const axios = require('axios');
 const { uuid } = require('uuidv4');
 
 
-export const sendSpansToBackend  = async(queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
+ const sendSpansToBackend  = async(queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
   if (!apiKey) {
     console.debug("API Key doesnt exists");
   }
@@ -37,7 +37,7 @@ export const sendSpansToBackend  = async(queriesToSend, apiKey, metisExporterUrl
   }
 };
 
-export const makeSpan = async (query, queryType, plan, connection, logFileName) =>  {
+ const makeSpan = async (query, queryType, plan, connection, logFileName) =>  {
   const span_id = uuid();
   const traceId = uuid();
 
@@ -107,7 +107,7 @@ const axiosPost = async (url, body, options) => {
 };
 
 
-export function * chuncker (data, limit = 200000) {
+ function * chuncker (data, limit = 200000) {
   if (!data) {
     return [];
   }
@@ -158,7 +158,7 @@ return response;
 }
 
 
-export const  sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQueryLogData, connection, logFileName, metisBackendUrl) =>  {
+ const  sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQueryLogData, connection, logFileName, metisBackendUrl) =>  {
 
   if(metisApikey && metisExporterUrl) {
     const spans = await Promise.all(slowQueryLogData.map(async (item) => {
