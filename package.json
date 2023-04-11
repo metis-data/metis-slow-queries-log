@@ -29,6 +29,7 @@
     "@metis-data/db-details": "2.5.2",
     "axios": "^1.2.2",
     "pg-connection-string": "^2.5.0",
+    "pg-structure": "^7.13.1",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
