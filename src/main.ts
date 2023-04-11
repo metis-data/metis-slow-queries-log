@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import axios from 'axios';
+import { sendSpansFromSlowQueryLog } from './spans';
 const { dbDetailsFactory } = require('@metis-data/db-details');
 const parse = require('pg-connection-string').parse;
 
@@ -45,7 +46,7 @@ async function run(): Promise<void> {
       Collect Slow query log data.
     */
     const slowQueryLogData = await getSlowQueryLogData(dbConnection);
-    
+    await sendSpansFromSlowQueryLog(metisApikey, 'https://ingest.metisdata.io', slowQueryLogData,dbConnection,'test-log' )
    
   } catch (error: any) {
     console.error(error);
