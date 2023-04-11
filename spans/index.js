@@ -1,5 +1,5 @@
-import axios from "axios";
-import { uuid } from "uuidv4";
+const axios = require('axios');
+const { uuid } = require('uuidv4');
 
 
 export const sendSpansToBackend  = async(queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
