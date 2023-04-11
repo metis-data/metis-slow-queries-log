@@ -1,8 +1,10 @@
-import * as core from '@actions/core'
-import axios from 'axios';
-import { sendSpansFromSlowQueryLog } from './spans';
+
+const core = require('@actions/core');
+const axios = require('axios');
 const { dbDetailsFactory } = require('@metis-data/db-details');
 const parse = require('pg-connection-string').parse;
+const { sendSpansFromSlowQueryLog } = require('./spans');
+
 
 const getSlowQueryLogData = async (dbConnection) => {
   const dbDetails = dbDetailsFactory('postgres');

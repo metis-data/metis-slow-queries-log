@@ -170,3 +170,6 @@ export const  sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, 
     sendSpansToBackend(spans, metisApikey, metisExporterUrl,logFileName,metisBackendUrl);
   }
   }
+
+
+  module.exports = { sendSpansFromSlowQueryLog}
