@@ -2817,20 +2817,22 @@ module.exports = require("util");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const core = __nccwpck_require__(481);
+const core = __nccwpck_require__(481)
 
 async function main() {
-  const lastTag = core.getInput("tag");
+  const lastTag = core.getInput('tag')
 
-  let version = lastTag.replace("v", "").replace(/\s/g, "");;
+  let version = lastTag.replace('v', '')
 
-  version = version.split(".").map((i) => Number.parseInt(i));
-  version[2]++;
+  version = version.split('.').map(i => Number.parseInt(i))
+  core.info(version[0])
+  core.info(version[1])
+  version[1]++
 
-  core.setOutput("tag", `v${version.join(".")}`);
+  core.setOutput('tag', `v${version.join('.')}`)
 }
 
-main();
+main()
 
 })();
 
