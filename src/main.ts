@@ -3,7 +3,7 @@ import axios from 'axios';
 import { sendSpansFromSlowQueryLog } from './spans';
 const { dbDetailsFactory } = require('@metis-data/db-details');
 const parse = require('pg-connection-string').parse;
-////
+
 const getSlowQueryLogData = async (dbConnection: any) => {
   const dbDetails = dbDetailsFactory('postgres');
 
