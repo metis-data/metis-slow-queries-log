@@ -4,11 +4,14 @@ This GitHub Action collects and analyzes slow query log data for a PostgreSQL da
 
 ## Inputs
 
-- `metis_api_key` *(required)*: The Metis API key project identifier.
-- `github_token` *(required)*: The GitHub token.
-- `target_url` *(optional)*: The target URL. Defaults to `'https://app.metisdata.io'`.
-- `metis_exporter_url` *(optional)*: The Metis exporter URL. Defaults to `'https://ingest.metisdata.io'`.
-- `db_connection_string` *(required)*: The database connection string.
+| <span style="color:green">Name</span> | <span style="color:green">Requirement</span> | <span style="color:green">Description</span> | <span style="color:green">Default</span> |
+| ---------------------| ------------| -----------------------------------------------------------| -------------------------------------|
+| `metis_api_key`       | Required    | The Metis API key project identifier.                      |                                      |
+| `github_token`       | Required    | The GitHub token.                                          |                                      |
+| `target_url`         | Optional    | The target URL. Defaults to `'https://app.metisdata.io'`.  | `'https://app.metisdata.io'`         |
+| `metis_exporter_url` | Optional    | The Metis exporter URL. Defaults to `'https://ingest.metisdata.io'`. | `'https://ingest.metisdata.io'` |
+| `db_connection_string`| Required    | The database connection string.                            |                                      |
+
 
 ## Runs
 
