@@ -2,92 +2,84 @@ const axios = require('axios');
 const { uuid } = require('uuidv4');
 const core = require('@actions/core');
 
- const sendSpansToBackend  = async(queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
+const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
   if (!apiKey) {
-    console.debug("API Key doesnt exists");
+    console.debug('API Key doesnt exists');
   }
 
   const data = {
-    "prName": logFileName,
-    "prId": "no-set",
-    "prUrl": "no-set"
-   }
-  
+    prName: logFileName,
+    prId: 'no-set',
+    prUrl: 'no-set',
+  };
 
   try {
     const options = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Content-Length": JSON.stringify(data).length,
-        "x-api-key": apiKey,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Content-Length': JSON.stringify(data).length,
+        'x-api-key': apiKey,
       },
     };
-   await axiosPost(`${metisBackendUrl ? metisBackendUrl : 'https://app.metisdata.io' }/api/tests/create`,JSON.stringify(data),options)
+    await axiosPost(`${metisBackendUrl ? metisBackendUrl : 'https://app.metisdata.io'}/api/tests/create`, JSON.stringify(data), options);
 
     const url = metisExporterUrl;
-    await sendMultiSpans(
-      url,
-      apiKey,
-      queriesToSend
-    );
+    await sendMultiSpans(url, apiKey, queriesToSend);
   } catch (error) {
     console.error(error);
   }
 };
 
- const makeSpan = async (query, queryType, plan, connection, logFileName) =>  {
+const makeSpan = async (query, queryType, plan, connection, logFileName) => {
   const span_id = uuid();
   const traceId = uuid();
 
-  const duration = plan && plan["Execution Time"] || 1;
+  const duration = (plan && plan['Execution Time']) || 1;
 
   const timestamp = Date.now();
   const startDate = new Date(timestamp).toISOString();
   const endDate = new Date(timestamp + duration).toISOString();
 
-  const vendor = "github-action";
-
+  const vendor = 'github-action';
 
   // get host name
   let hostName = vendor;
   try {
     hostName = connection.host;
-  } catch (e) {
-
-  }
+  } catch (e) {}
 
   const resource = {
-    "app.tag.pr": logFileName, 
-    "service.name": hostName,
-    "service.version": 'or0.000000000000001%',
-    "telemetry.sdk.name": vendor,
-    "telemetry.sdk.version": 'or0.000000000000000000000000001%',
-    "telemetry.sdk.language": vendor,
+    'app.tag.pr': logFileName,
+    'service.name': hostName,
+    'service.version': 'or0.000000000000001%',
+    'telemetry.sdk.name': vendor,
+    'telemetry.sdk.version': 'or0.000000000000000000000000001%',
+    'telemetry.sdk.language': vendor,
   };
 
   return {
     parent_id: null,
-    name: queryType || "REPL",
-    kind: "SpanKind.CLIENT",
+    name: queryType || 'REPL',
+    kind: 'SpanKind.CLIENT',
     timestamp: Date.now(),
     duration: duration,
     start_time: startDate,
     end_time: endDate,
     attributes: {
-      "db.name": connection?.database,
-      "db.user": connection?.user,
-      "db.system": 'postgres',
-      "db.operation": queryType,
-      "db.statement": query,
-      "db.statement.metis": query + `/*traceparent=${traceId}-${span_id}*/''`,
-      "db.statement.metis.plan": JSON.stringify(plan, null, 0),
-      "net.peer.name": connection?.host,
-      "net.peer.ip": connection?.host,
+      'db.name': connection?.database,
+      'db.user': connection?.user,
+      'db.system': 'postgres',
+      'db.operation': queryType,
+      'db.statement': query,
+      'db.statement.metis': query + `/*traceparent=${traceId}-${span_id}*/''`,
+      'db.statement.metis.plan': JSON.stringify(plan, null, 0),
+      'net.peer.name': connection?.host,
+      'net.peer.ip': connection?.host,
     },
     status: {
-      status_code: "UNSET",
+      status_code: 'UNSET',
     },
     context: {
       span_id: span_id,
@@ -95,7 +87,7 @@ const core = require('@actions/core');
     },
     resource,
   };
-}
+};
 
 const axiosPost = async (url, body, options) => {
   try {
@@ -106,8 +98,7 @@ const axiosPost = async (url, body, options) => {
   }
 };
 
-
- function * chuncker (data, limit = 200000) {
+function* chuncker(data, limit = 200000) {
   if (!data) {
     return [];
   }
@@ -127,51 +118,42 @@ const axiosPost = async (url, body, options) => {
   yield result;
 }
 
- async function sendMultiSpans(
-  url,
-  apiKey,
-  spans
-) {
-const spansString = spans.map((d) => JSON.stringify(d, null, 0));
-const response = [];
-for (let chuckedData of chuncker(spansString)) {
-  const dataString = JSON.stringify(
-      chuckedData,
-      null,
-      0
-  );
+async function sendMultiSpans(url, apiKey, spans) {
+  const spansString = spans.map((d) => JSON.stringify(d, null, 0));
+  const response = [];
+  for (let chuckedData of chuncker(spansString)) {
+    const dataString = JSON.stringify(chuckedData, null, 0);
 
-  const options = {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      "Content-Length": dataString.length,
-      "x-api-key": apiKey,
-    },
-  };
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Content-Length': dataString.length,
+        'x-api-key': apiKey,
+      },
+    };
 
-  response.push(await axiosPost(url, dataString, options));
-}
-
-return response;
-}
-
-
- const  sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQueryLogData, connection, logFileName, metisBackendUrl) =>  {
-
-  if(metisApikey && metisExporterUrl) {
-   
-    const spans = await Promise.all(slowQueryLogData.map(async (item) => {
-      const splitted = item.message.split("plan:");
-      const d = splitted[1];
-      const jsonStr = JSON.parse(d.replaceAll("undefined", ""));
-      return await makeSpan(jsonStr['Query Text'], 'select', {Plan: jsonStr.Plan}, connection, logFileName )
-       
-    }))
-    sendSpansToBackend(spans, metisApikey, metisExporterUrl,logFileName,metisBackendUrl);
-  }
+    response.push(await axiosPost(url, dataString, options));
   }
 
+  return response;
+}
 
-  module.exports = { sendSpansFromSlowQueryLog}
+const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQueryLogData, connection, logFileName, metisBackendUrl) => {
+  if (metisApikey && metisExporterUrl) {
+    const spans = await Promise.all(
+      slowQueryLogData.map(async (item) => {
+        const splitted = item.message.split('plan:');
+        const data = splitted[1];
+        if (data) {
+          const jsonStr = JSON.parse(data);
+          return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logFileName);
+        }
+      })
+    );
+    sendSpansToBackend(spans, metisApikey, metisExporterUrl, logFileName, metisBackendUrl);
+  }
+};
+
+module.exports = { sendSpansFromSlowQueryLog };
