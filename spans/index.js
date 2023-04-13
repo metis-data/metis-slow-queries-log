@@ -6,7 +6,9 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFi
   if (!apiKey) {
     console.debug('API Key doesnt exists');
   }
-
+  core.info(`queries to send`);
+  core.info(queriesToSend.length);
+  core.info(`queries to send`);
   const data = {
     prName: logFileName,
     prId: 'no-set',
@@ -98,33 +100,13 @@ const axiosPost = async (url, body, options) => {
   }
 };
 
-function* chuncker(data, limit = 200000) {
-  if (!data) {
-    return [];
-  }
-
-  let result = [];
-  let counter = 0;
-  for (const item of data) {
-    counter += item.length;
-    result.push(item);
-    if (counter >= limit) {
-      yield result;
-      counter = 0;
-      result = []; // start a new chunk
-    }
-  }
-
-  yield result;
-}
-
 async function sendMultiSpans(url, apiKey, spans) {
   core.info(`spans length : ${spans.length}`);
   const spansString = spans.map((d) => d && JSON.stringify(d, null, 0));
   const response = [];
-  for (let chuckedData of chuncker(spansString)) {
+  for (let chuckedData of spansString) {
     const dataString = chuckedData ? JSON.stringify(chuckedData, null, 0) : undefined;
-    if (dataString) {
+    if (dataString && dataString.length) {
       const options = {
         method: 'POST',
         headers: {
@@ -143,15 +125,10 @@ async function sendMultiSpans(url, apiKey, spans) {
 }
 
 const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQueryLogData, connection, logFileName, metisBackendUrl) => {
-  core.info(`slow query log`);
-  core.info(slowQueryLogData);
-  core.info(`slow query log end `);
   const spans = await Promise.all(
     slowQueryLogData.map(async (item) => {
-      core.info(JSON.stringify(item));
       const splitted = item.message.split('plan:');
       const data = splitted[1];
-      core.info(`data: ${data}`);
       if (data) {
         const jsonStr = JSON.parse(data);
         core.info(data);
@@ -160,7 +137,7 @@ const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQuer
       return undefined;
     })
   );
-
+  core.info(`spans length: ${spans.length} `);
   sendSpansToBackend(spans, metisApikey, metisExporterUrl, logFileName, metisBackendUrl);
 };
 
