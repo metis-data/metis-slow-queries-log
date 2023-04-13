@@ -125,6 +125,7 @@ async function sendMultiSpans(url, apiKey, spans) {
 }
 
 const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQueryLogData, connection, metisBackendUrl) => {
+  const logName = slowQueryLogData?.logFileName?.replace(`'`, '') || `slow_query_log`;
   const spans = await Promise.all(
     slowQueryLogData.data.map(async (item) => {
       const splitted = item.message.split('plan:');
@@ -132,12 +133,12 @@ const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQuer
       if (data) {
         const jsonStr = JSON.parse(data);
         core.info(data);
-        return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, slowQueryLogData.logFileName);
+        return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logName);
       }
     })
   );
-  core.info(`spans length: ${spans.length} `);
-  sendSpansToBackend(spans, metisApikey, metisExporterUrl, slowQueryLogData.logFileName, metisBackendUrl);
+
+  sendSpansToBackend(spans, metisApikey, metisExporterUrl, logName, metisBackendUrl);
 };
 
 module.exports = { sendSpansFromSlowQueryLog };
