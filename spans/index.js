@@ -134,7 +134,6 @@ const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQuer
         core.info(data);
         return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logFileName);
       }
-      return undefined;
     })
   );
   core.info(`spans length: ${spans.length} `);
