@@ -48,6 +48,7 @@ async function run(){
       Collect Slow query log data.
     */
     const slowQueryLogData = await getSlowQueryLogData(dbConnection);
+    core.info(slowQueryLogData[0])
     await sendSpansFromSlowQueryLog(metisApikey, 'https://ingest.metisdata.io', slowQueryLogData,dbConnection,'test-log' )
    
   } catch (error) {
