@@ -49,7 +49,7 @@ async function run(){
     */
     const slowQueryLogData = await getSlowQueryLogData(dbConnection);
 
-    await sendSpansFromSlowQueryLog(metisApikey, 'https://ingest.metisdata.io', slowQueryLogData,dbConnection)
+    await sendSpansFromSlowQueryLog(metisApikey, core.getInput('metis_api_key'), core.getInput('metis_exporter_url'), slowQueryLogData,dbConnection, core.getInput('target_url'))
    
   } catch (error) {
     console.error(error);

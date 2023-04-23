@@ -25,7 +25,7 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFi
         'x-api-key': apiKey,
       },
     };
-    await axiosPost(`${metisBackendUrl ? metisBackendUrl : 'https://app.metisdata.io'}/api/tests/create`, JSON.stringify(data), options);
+    await axiosPost(`${metisBackendUrl}/api/tests/create`, JSON.stringify(data), options);
 
     const url = metisExporterUrl;
     await sendMultiSpans(url, apiKey, queriesToSend);
