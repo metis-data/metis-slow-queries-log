@@ -1,16 +1,14 @@
-
 const core = require('@actions/core');
 const axios = require('axios');
 const { dbDetailsFactory } = require('@metis-data/db-details');
 const parse = require('pg-connection-string').parse;
 const { sendSpansFromSlowQueryLog } = require('./spans');
 
-
 const getSlowQueryLogData = async (dbConnection) => {
   const dbDetails = dbDetailsFactory('postgres');
 
-  const slowQueryLogData = dbDetails.getSlowQueryLogQueriesSpans(dbConnection)
-  
+  const slowQueryLogData = dbDetails.getSlowQueryLogQueriesSpans(dbConnection);
+
   return await slowQueryLogData;
 };
 
@@ -23,9 +21,7 @@ const axiosPost = async (url, body, headers) => {
   }
 };
 
-
-
-async function run(){
+async function run() {
   try {
     /*
       Parse connection string to object
@@ -48,13 +44,15 @@ async function run(){
       Collect Slow query log data.
     */
     const slowQueryLogData = await getSlowQueryLogData(dbConnection);
-
-    await sendSpansFromSlowQueryLog(metisApikey, core.getInput('metis_api_key'), core.getInput('metis_exporter_url'), slowQueryLogData,dbConnection, core.getInput('target_url'))
-   
+    console.log('check');
+    core.info('check -info');
+    console.log(`log: ${slowQueryLogData}`);
+    core.info(`info: ${slowQueryLogData}`);
+    await sendSpansFromSlowQueryLog(metisApikey, core.getInput('metis_api_key'), core.getInput('metis_exporter_url'), slowQueryLogData, dbConnection, core.getInput('target_url'));
   } catch (error) {
     console.error(error);
     core.setFailed(error);
   }
 }
 
-run()
+run();
