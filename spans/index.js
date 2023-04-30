@@ -125,24 +125,22 @@ async function sendMultiSpans(url, apiKey, spans) {
   return response;
 }
 
-const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQueryLogData, connection, metisBackendUrl) => {
+const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connection,  metisExporterUrl, metisBackendUrl) => {
   const logName = slowQueryLogData?.logFileName?.replace(`'`, '') || `slow_query_log`;
  
-  console.log(`log: ${slowQueryLogData}`);
-    core.info(`info: ${JSON.stringify(slowQueryLogData)}`);
-  // const spans = await Promise.all(
-  //   slowQueryLogData?.data.map(async (item) => {
-  //     const splitted = item?.message?.split('plan:');
-  //     const data = splitted[1];
-  //     if (data) {
-  //       const jsonStr = JSON.parse(data);
-  //       core.info(data);
-  //       return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logName);
-  //     }
-  //   })
-  // );
+  const spans = await Promise.all(
+    slowQueryLogData?.data.map(async (item) => {
+      const splitted = item?.message?.split('plan:');
+      const data = splitted[1];
+      if (data) {
+        const jsonStr = JSON.parse(data);
+        core.info(data);
+        return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logName);
+      }
+    })
+  );
 
-  // sendSpansToBackend(spans, metisApikey, metisExporterUrl, logName, metisBackendUrl);
+  sendSpansToBackend(spans, metisApikey, metisExporterUrl, logName, metisBackendUrl);
 };
 
 module.exports = { sendSpansFromSlowQueryLog };
