@@ -3,6 +3,7 @@ const { uuid } = require('uuidv4');
 const core = require('@actions/core');
 
 const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
+  try {
   if (!apiKey) {
     console.debug('API Key doesnt exists');
   }
@@ -15,7 +16,7 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFi
     prUrl: 'no-set',
   };
 
-  try {
+
     const options = {
       method: 'POST',
       headers: {
