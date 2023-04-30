@@ -4,32 +4,32 @@ const core = require('@actions/core');
 
 const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
   try {
-    core.info(`queriesToSend: ${queriesToSend}`);
+    
     if (!apiKey) {
       console.debug('API Key doesnt exists');
     }
     core.info(`queries to send`);
     core.info(queriesToSend.length);
     core.info(`queries to send`);
-    // const data = {
-    //   prName: logFileName,
-    //   prId: 'no-set',
-    //   prUrl: 'no-set',
-    // };
+    const data = {
+      prName: logFileName,
+      prId: 'no-set',
+      prUrl: 'no-set',
+    };
 
-    // const options = {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //     'Content-Length': JSON.stringify(data).length,
-    //     'x-api-key': apiKey,
-    //   },
-    // };
-    // await axiosPost(`${metisBackendUrl}/api/tests/create`, JSON.stringify(data), options);
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Content-Length': JSON.stringify(data).length,
+        'x-api-key': apiKey,
+      },
+    };
+    await axiosPost(`${metisBackendUrl}/api/tests/create`, JSON.stringify(data), options);
 
-    // const url = metisExporterUrl;
-    // await sendMultiSpans(url, apiKey, queriesToSend);
+    const url = metisExporterUrl;
+    await sendMultiSpans(url, apiKey, queriesToSend);
   } catch (error) {
     console.error(error);
   }
@@ -127,6 +127,7 @@ async function sendMultiSpans(url, apiKey, spans) {
 
 const sendSpansFromSlowQueryLog = async (metisApikey, metisExporterUrl, slowQueryLogData, connection, metisBackendUrl) => {
   const logName = slowQueryLogData?.logFileName?.replace(`'`, '') || `slow_query_log`;
+  core.info(slowQueryLogData);
   const spans = await Promise.all(
     slowQueryLogData.data.map(async (item) => {
       const splitted = item.message.split('plan:');
