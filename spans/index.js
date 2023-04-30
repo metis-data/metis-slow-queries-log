@@ -11,25 +11,25 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFi
     core.info(`queries to send`);
     core.info(queriesToSend.length);
     core.info(`queries to send`);
-    const data = {
-      prName: logFileName,
-      prId: 'no-set',
-      prUrl: 'no-set',
-    };
+    // const data = {
+    //   prName: logFileName,
+    //   prId: 'no-set',
+    //   prUrl: 'no-set',
+    // };
 
-    const options = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Content-Length': JSON.stringify(data).length,
-        'x-api-key': apiKey,
-      },
-    };
-    await axiosPost(`${metisBackendUrl}/api/tests/create`, JSON.stringify(data), options);
+    // const options = {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //     'Content-Length': JSON.stringify(data).length,
+    //     'x-api-key': apiKey,
+    //   },
+    // };
+    // await axiosPost(`${metisBackendUrl}/api/tests/create`, JSON.stringify(data), options);
 
-    const url = metisExporterUrl;
-    await sendMultiSpans(url, apiKey, queriesToSend);
+    // const url = metisExporterUrl;
+    // await sendMultiSpans(url, apiKey, queriesToSend);
   } catch (error) {
     console.error(error);
   }
