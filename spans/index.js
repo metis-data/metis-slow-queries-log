@@ -28,8 +28,7 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFi
     };
     await axiosPost(`${metisBackendUrl}/api/tests/create`, JSON.stringify(data), options);
 
-    const url = metisExporterUrl;
-    await sendMultiSpans(url, apiKey, queriesToSend);
+    await sendMultiSpans(metisExporterUrl, apiKey, queriesToSend);
   } catch (error) {
     console.error(error);
   }
@@ -126,7 +125,7 @@ async function sendMultiSpans(url, apiKey, spans) {
 }
 
 const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connection,  metisExporterUrl, metisBackendUrl) => {
-  const logName = slowQueryLogData?.logFileName?.replace(`'`, '') || `slow_query_log`;
+  const logName = slowQueryLogData?.logFileName?.replaceAll(`'`, '') || `slow_query_log`;
  
   const spans = await Promise.all(
     slowQueryLogData?.data.map(async (item) => {
