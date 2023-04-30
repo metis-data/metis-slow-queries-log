@@ -4,18 +4,18 @@ const core = require('@actions/core');
 
 const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
   try {
-  if (!apiKey) {
-    console.debug('API Key doesnt exists');
-  }
-  core.info(`queries to send`);
-  core.info(queriesToSend.length);
-  core.info(`queries to send`);
-  const data = {
-    prName: logFileName,
-    prId: 'no-set',
-    prUrl: 'no-set',
-  };
-
+    core.info(`queriesToSend: ${queriesToSend}`);
+    if (!apiKey) {
+      console.debug('API Key doesnt exists');
+    }
+    core.info(`queries to send`);
+    core.info(queriesToSend.length);
+    core.info(`queries to send`);
+    const data = {
+      prName: logFileName,
+      prId: 'no-set',
+      prUrl: 'no-set',
+    };
 
     const options = {
       method: 'POST',
