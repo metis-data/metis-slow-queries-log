@@ -12,15 +12,6 @@ const getSlowQueryLogData = async (dbConnection) => {
   return await slowQueryLogData;
 };
 
-const axiosPost = async (url, body, headers) => {
-  try {
-    const res = await axios.post(url, body, { headers: headers });
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 async function run() {
   try {
     /*
@@ -44,9 +35,9 @@ async function run() {
       Collect Slow query log data.
     */
     const slowQueryLogData = await getSlowQueryLogData(dbConnection);
-   
-    await sendSpansFromSlowQueryLog(metisApikey, slowQueryLogData, dbConnection, core.getInput('metis_exporter_url'), core.getInput('target_url'));
- 
+    if (slowQueryLogData && slowQueryLogData.length > 0) {
+      await sendSpansFromSlowQueryLog(metisApikey, slowQueryLogData, dbConnection, core.getInput('metis_exporter_url'), core.getInput('target_url'));
+    }
   } catch (error) {
     console.error(error);
     core.setFailed(error);

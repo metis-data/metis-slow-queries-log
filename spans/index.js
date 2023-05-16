@@ -4,7 +4,10 @@ const core = require('@actions/core');
 
 const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
   try {
-    
+    if (queriesToSend === 0) {
+      console.log('No Spans To Send');
+      return;
+    }
     if (!apiKey) {
       console.debug('API Key doesnt exists');
     }
@@ -124,9 +127,9 @@ async function sendMultiSpans(url, apiKey, spans) {
   return response;
 }
 
-const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connection,  metisExporterUrl, metisBackendUrl) => {
+const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connection, metisExporterUrl, metisBackendUrl) => {
   const logName = slowQueryLogData?.logFileName?.replaceAll(`'`, '') || `slow_query_log`;
- 
+
   const spans = await Promise.all(
     slowQueryLogData?.data.map(async (item) => {
       const splitted = item?.message?.split('plan:');
