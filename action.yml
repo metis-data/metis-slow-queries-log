@@ -12,11 +12,11 @@ inputs:
   target_url:
     description: target url
     required: false
-    default: 'https://app.metisdata.io'
+    default: 'https://dev.metisdata.io'
   metis_exporter_url:
     description: target url
     required: false
-    default: 'https://ingest.metisdata.io'
+    default: 'https://ingest-stg.metisdata.io'
   db_connection_string:
     description: database connection string 
     required: true
