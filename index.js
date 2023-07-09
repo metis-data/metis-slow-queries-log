@@ -7,8 +7,8 @@ const { sendSpansFromSlowQueryLog } = require('./spans');
 const getSlowQueryLogData = async (dbConnection) => {
   const dbDetails = dbDetailsFactory('postgres');
 
-  const slowQueryLogData = dbDetails.getSlowQueryLogQueriesSpans(dbConnection);
-
+  const slowQueryLogData = await dbDetails.getSlowQueryLogQueriesSpans(dbConnection);
+  core.info(slowQueryLogData)
   return await slowQueryLogData;
 };
 
