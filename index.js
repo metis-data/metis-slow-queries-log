@@ -35,9 +35,6 @@ async function run() {
       Collect Slow query log data.
     */
     const slowQueryLogData = await getSlowQueryLogData(dbConnection);
-    core.info('aaa')
-    core.info(JSON.stringify(slowQueryLogData))
-    core.info('aaa')
     if (slowQueryLogData && slowQueryLogData.length > 0) {
       await sendSpansFromSlowQueryLog(metisApikey, slowQueryLogData, dbConnection, core.getInput('metis_exporter_url'), core.getInput('target_url'));
     }
