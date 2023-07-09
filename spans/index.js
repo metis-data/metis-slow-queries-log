@@ -54,7 +54,7 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
   try {
     hostName = connection.host;
   } catch (e) {}
-
+  const parsedPlan = JSON.stringify(plan);
   const resource = {
     'app.tag.pr': logFileName,
     'service.name': hostName,
@@ -64,13 +64,25 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
     'telemetry.sdk.language': vendor,
   };
 
-  
-  const parsedPlan = JSON.stringify(plan);
   return {
+    parent_id: null,
+    name: queryType || 'REPL',
     kind: 'SpanKind.CLIENT',
-    name: 'SELECT postgres',
-    links: [],
-    events: [],
+    timestamp: Date.now(),
+    duration: duration,
+    start_time: startDate,
+    end_time: endDate,
+    attributes: {
+      'db.name': connection?.database,
+      'db.user': connection?.user,
+      'db.system': 'postgres',
+      'db.operation': queryType,
+      'db.statement': query,
+      'db.statement.metis': query + `/*traceparent=${traceId}-${span_id}*/''`,
+      'db.statement.metis.plan': parsedPlan,
+      'net.peer.name': connection?.host,
+      'net.peer.ip': connection?.host,
+    },
     status: {
       status_code: 'UNSET',
     },
@@ -78,56 +90,8 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
       span_id: span_id,
       trace_id: traceId,
     },
-    end_time: endDate,
-    start_time: startDate,
-    duration: 100,
-    resource: {
-      'service.name': 'api-service',
-      'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
-      'metis.sdk.name': logFileName,
-      'telemetry.sdk.name': 'Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25',
-      'telemetry.sdk.version': '1.11.1',
-      'telemetry.sdk.language': 'query-analysis',
-      'app.tag.pr': logFileName,
-    },
-    parent_id: null,
-    attributes: {
-      'db.name': '',
-      'db.system': 'postgresql',
-      'db.statement.metis': query,
-      'net.peer.name': '',
-      'net.peer.port':  5432,
-      'db.statement.metis.plan': parsedPlan,
-    },
+    resource,
   };
-  // return {
-  //   parent_id: null,
-  //   name: queryType || 'REPL',
-  //   kind: 'SpanKind.CLIENT',
-  //   timestamp: Date.now(),
-  //   duration: duration,
-  //   start_time: startDate,
-  //   end_time: endDate,
-  //   attributes: {
-  //     'db.name': connection?.database,
-  //     'db.user': connection?.user,
-  //     'db.system': 'postgres',
-  //     'db.operation': queryType,
-  //     'db.statement': query,
-  //     'db.statement.metis': query + `/*traceparent=${traceId}-${span_id}*/''`,
-  //     'db.statement.metis.plan': JSON.stringify(plan, null, 0),
-  //     'net.peer.name': connection?.host,
-  //     'net.peer.ip': connection?.host,
-  //   },
-  //   status: {
-  //     status_code: 'UNSET',
-  //   },
-  //   context: {
-  //     span_id: span_id,
-  //     trace_id: traceId,
-  //   },
-  //   resource,
-  // };
 };
 
 const axiosPost = async (url, body, options) => {
@@ -165,11 +129,10 @@ async function sendMultiSpans(url, apiKey, spans) {
 
 const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connection, metisExporterUrl, metisBackendUrl) => {
   const logName = slowQueryLogData?.logFileName?.replaceAll(`'`, '') || `slow_query_log`;
- 
+  core.info(slowQueryLogData.data.length)
   const spans = await Promise.all(
-    slowQueryLogData?.data.slice(0,100).map(async (item) => {
+    slowQueryLogData?.data.map(async (item) => {
       const splitted = item?.message?.split('plan:');
-    
       const data = splitted[1];
       if (data) {
         const jsonStr = JSON.parse(data);
