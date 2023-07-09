@@ -64,6 +64,7 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
     'telemetry.sdk.language': vendor,
   };
 
+  core.info(plan);
   return {
     parent_id: null,
     name: queryType || 'REPL',
@@ -133,11 +134,10 @@ const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connecti
   const spans = await Promise.all(
     slowQueryLogData?.data.map(async (item) => {
       const splitted = item?.message?.split('plan:');
-      core.info(splitted);
+    
       const data = splitted[1];
       if (data) {
         const jsonStr = JSON.parse(data);
-        core.info(data);
         return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logName);
       }
     })
