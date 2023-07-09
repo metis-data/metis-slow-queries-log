@@ -8,7 +8,7 @@ const getSlowQueryLogData = async (dbConnection) => {
   const dbDetails = dbDetailsFactory('postgres');
 
   const slowQueryLogData = await dbDetails.getSlowQueryLogQueriesSpans(dbConnection);
-  core.info(JSON.stringify(slowQueryLogData))
+  // core.info(JSON.stringify(slowQueryLogData))
   return await slowQueryLogData;
 };
 
