@@ -96,7 +96,7 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
       'db.system': 'postgresql',
       'db.statement.metis': query,
       'net.peer.name': '',
-      'net.peer.port': credentials?.port || 5432,
+      'net.peer.port':  5432,
       'db.statement.metis.plan': parsedPlan,
     },
   };
