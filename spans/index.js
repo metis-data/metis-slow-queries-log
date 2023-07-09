@@ -84,50 +84,50 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
     resource: {
       'service.name': 'api-service',
       'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
-      'metis.sdk.name': prName,
+      'metis.sdk.name': logFileName,
       'telemetry.sdk.name': 'Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25',
       'telemetry.sdk.version': '1.11.1',
       'telemetry.sdk.language': 'query-analysis',
-      'app.tag.pr': prName,
+      'app.tag.pr': logFileName,
     },
     parent_id: null,
     attributes: {
-      'db.name': credentials?.database,
+      'db.name': '',
       'db.system': 'postgresql',
-      'db.statement.metis': item.query,
-      'net.peer.name': credentials?.host,
+      'db.statement.metis': query,
+      'net.peer.name': '',
       'net.peer.port': credentials?.port || 5432,
       'db.statement.metis.plan': parsedPlan,
     },
   };
-  return {
-    parent_id: null,
-    name: queryType || 'REPL',
-    kind: 'SpanKind.CLIENT',
-    timestamp: Date.now(),
-    duration: duration,
-    start_time: startDate,
-    end_time: endDate,
-    attributes: {
-      'db.name': connection?.database,
-      'db.user': connection?.user,
-      'db.system': 'postgres',
-      'db.operation': queryType,
-      'db.statement': query,
-      'db.statement.metis': query + `/*traceparent=${traceId}-${span_id}*/''`,
-      'db.statement.metis.plan': JSON.stringify(plan, null, 0),
-      'net.peer.name': connection?.host,
-      'net.peer.ip': connection?.host,
-    },
-    status: {
-      status_code: 'UNSET',
-    },
-    context: {
-      span_id: span_id,
-      trace_id: traceId,
-    },
-    resource,
-  };
+  // return {
+  //   parent_id: null,
+  //   name: queryType || 'REPL',
+  //   kind: 'SpanKind.CLIENT',
+  //   timestamp: Date.now(),
+  //   duration: duration,
+  //   start_time: startDate,
+  //   end_time: endDate,
+  //   attributes: {
+  //     'db.name': connection?.database,
+  //     'db.user': connection?.user,
+  //     'db.system': 'postgres',
+  //     'db.operation': queryType,
+  //     'db.statement': query,
+  //     'db.statement.metis': query + `/*traceparent=${traceId}-${span_id}*/''`,
+  //     'db.statement.metis.plan': JSON.stringify(plan, null, 0),
+  //     'net.peer.name': connection?.host,
+  //     'net.peer.ip': connection?.host,
+  //   },
+  //   status: {
+  //     status_code: 'UNSET',
+  //   },
+  //   context: {
+  //     span_id: span_id,
+  //     trace_id: traceId,
+  //   },
+  //   resource,
+  // };
 };
 
 const axiosPost = async (url, body, options) => {
