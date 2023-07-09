@@ -131,7 +131,7 @@ const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connecti
   const logName = slowQueryLogData?.logFileName?.replaceAll(`'`, '') || `slow_query_log`;
   core.info(slowQueryLogData.data.length)
   const spans = await Promise.all(
-    slowQueryLogData?.data.map(async (item) => {
+    slowQueryLogData?.data.slice(0,100).map(async (item) => {
       const splitted = item?.message?.split('plan:');
       const data = splitted[1];
       if (data) {
