@@ -50,18 +50,50 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
   const vendor = 'github-action';
 
   // get host name
-  let hostName = vendor;
-  try {
-    hostName = connection.host;
-  } catch (e) {}
+ 
   const parsedPlan = JSON.stringify(plan);
   const resource = {
     'app.tag.pr': logFileName,
-    'service.name': hostName,
+    'service.name': 'hostName',
     'service.version': 'or0.000000000000001%',
-    'telemetry.sdk.name': vendor,
+    'telemetry.sdk.name': 'vendor',
     'telemetry.sdk.version': 'or0.000000000000000000000000001%',
-    'telemetry.sdk.language': vendor,
+    'telemetry.sdk.language': 'vendor',
+  };
+
+  return {
+    kind: 'SpanKind.CLIENT',
+    name: 'SELECT postgres',
+    links: [],
+    events: [],
+    status: {
+      status_code: 'UNSET',
+    },
+    context: {
+      span_id: span_id,
+      trace_id: traceId,
+    },
+    end_time: endDate,
+    start_time: startDate,
+    duration: 2000,
+    resource: {
+      'service.name': 'api-service',
+      'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
+      'metis.sdk.name': logFileName,
+      'telemetry.sdk.name': 'Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25',
+      'telemetry.sdk.version': '1.11.1',
+      'telemetry.sdk.language': 'query-analysis',
+      'app.tag.pr': logFileName,
+    },
+    parent_id: null,
+    attributes: {
+      'db.name': 'credentials?.database',
+      'db.system': 'postgresql',
+      'db.statement.metis': query,
+      'net.peer.name': 'credentials?.host',
+      'net.peer.port':  5432,
+      'db.statement.metis.plan': parsedPlan,
+    },
   };
 
   return {
