@@ -64,7 +64,42 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
     'telemetry.sdk.language': vendor,
   };
 
-  core.info(plan);
+  core.info(JSON.stringify(plan));
+  const parsedPlan = JSON.stringify(plan);
+  return {
+    kind: 'SpanKind.CLIENT',
+    name: 'SELECT postgres',
+    links: [],
+    events: [],
+    status: {
+      status_code: 'UNSET',
+    },
+    context: {
+      span_id: span_id,
+      trace_id: traceId,
+    },
+    end_time: endDate,
+    start_time: startDate,
+    duration: 100,
+    resource: {
+      'service.name': 'api-service',
+      'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
+      'metis.sdk.name': prName,
+      'telemetry.sdk.name': 'Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25',
+      'telemetry.sdk.version': '1.11.1',
+      'telemetry.sdk.language': 'query-analysis',
+      'app.tag.pr': prName,
+    },
+    parent_id: null,
+    attributes: {
+      'db.name': credentials?.database,
+      'db.system': 'postgresql',
+      'db.statement.metis': item.query,
+      'net.peer.name': credentials?.host,
+      'net.peer.port': credentials?.port || 5432,
+      'db.statement.metis.plan': parsedPlan,
+    },
+  };
   return {
     parent_id: null,
     name: queryType || 'REPL',
