@@ -64,7 +64,7 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
     'telemetry.sdk.language': vendor,
   };
 
-  core.info(JSON.stringify(plan));
+  
   const parsedPlan = JSON.stringify(plan);
   return {
     kind: 'SpanKind.CLIENT',
