@@ -161,7 +161,7 @@ async function sendMultiSpans(url, apiKey, spans) {
 
 function canParseJSON(input) {
   try {
-    JSON.parse(JSON.stringify(input));
+    JSON.parse(input);
     return true;
   } catch (error) {
     return false;
