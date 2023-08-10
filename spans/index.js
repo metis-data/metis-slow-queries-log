@@ -159,6 +159,15 @@ async function sendMultiSpans(url, apiKey, spans) {
   return response;
 }
 
+function canParseJSON(input) {
+  try {
+    JSON.parse(JSON.stringify(input));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connection, metisExporterUrl, metisBackendUrl) => {
   const logName = slowQueryLogData?.logFileName?.replaceAll(`'`, '') || `slow_query_log`;
   core.info(slowQueryLogData.data.length)
@@ -166,7 +175,7 @@ const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connecti
     slowQueryLogData?.data.map(async (item) => {
       const splitted = item?.message?.split('plan:');
       const data = splitted[1];
-      if (data) {
+      if (canParseJSON(data)) {
         const jsonStr = JSON.parse(data);
         return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logName);
       }
